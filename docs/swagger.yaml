@@ -1,0 +1,235 @@
+basePath: api/v1
+definitions:
+  model_account.Account:
+    properties:
+      balance:
+        type: integer
+      cpf:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      secret:
+        type: string
+    type: object
+  model_account.BalanceResponse:
+    properties:
+      balance:
+        type: integer
+    type: object
+  model_account.Create:
+    properties:
+      cpf:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  model_account.CreateResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  model_login.Login:
+    properties:
+      cpf:
+        type: string
+      secret:
+        type: string
+    type: object
+  model_login.LoginResponse:
+    properties:
+      id:
+        type: string
+      token:
+        type: string
+    type: object
+  model_transfer.DoTransferRequest:
+    properties:
+      account_destination_id:
+        type: string
+      amount:
+        type: integer
+    type: object
+  model_transfer.Transfer:
+    properties:
+      accountDestinationID:
+        type: string
+      accountOriginID:
+        type: string
+      amount:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        type: string
+    type: object
+  utils.Error:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8080/
+info:
+  contact:
+    email: jorgewpgomes@gmail.com
+    name: Jorge Pires
+  description: Create a transfer API between Internal accounts of a digital bank.
+  title: Challange Stone
+  version: "1.0"
+paths:
+  /account:
+    get:
+      description: get list of accounts.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model_account.Account'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: List of accounts
+      tags:
+      - Account
+    post:
+      consumes:
+      - application/json
+      description: create a account
+      parameters:
+      - description: input
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model_account.Create'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model_account.CreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Account create
+      tags:
+      - Account
+  /account/{account_id}/balance:
+    get:
+      consumes:
+      - application/json
+      description: get account balance
+      parameters:
+      - description: Account ID
+        in: path
+        name: account_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model_account.BalanceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Account balance
+      tags:
+      - Account
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login user to generate token
+      parameters:
+      - description: input
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model_login.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model_login.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Login
+      tags:
+      - Login
+  /transfers:
+    get:
+      consumes:
+      - application/json
+      description: Gets the list of transfers from the authenticated user.
+      parameters:
+      - default: Bearer <token>
+        description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model_transfer.Transfer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Get transfers
+      tags:
+      - Transfers
+    post:
+      consumes:
+      - application/json
+      description: transfers from one Account to another.
+      parameters:
+      - default: Bearer <token>
+        description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: input
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model_transfer.DoTransferRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Do Transfers
+      tags:
+      - Transfers
+swagger: "2.0"
