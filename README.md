@@ -4,6 +4,15 @@
 
 O desafio é criar uma API de transferencia entre contas Internas de um banco digital.
 
+Os tipo dos campos Balance e Amount utilizam o tipo int. 
+
+Exemplo para R$ 100,00: 
+
+float: 100.00
+int: 10000
+
+Para utilizar no front-end adicione 2 casas decimais para representar os centavos. 
+
 ## Pré-requistos
 
 - Docker
