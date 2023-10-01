@@ -1,4 +1,4 @@
-# ChallangeStone
+# Transactions
 
 <img align="right" width="50px" src="https://raw.githubusercontent.com/swaggo/swag/master/assets/swaggo.png">
 
